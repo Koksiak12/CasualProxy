@@ -57,6 +57,7 @@ public class Macro {
                             for (int i = 0; i <packets.size(); ++i) {
                                 if (p.stopMacroPlayer || s==null){
                                     p.sendMessage("$p &cStopowanie taska z macrem..");
+                                    p.stopMacroPlayer=false;
                                     Thread.currentThread().stop();
                                     break;
                                 }
@@ -83,6 +84,7 @@ public class Macro {
                         for (int i = 0; i < packets.size(); ++i) {
                             if (p.stopMacroPlayer || s==null){
                                 p.sendMessage("$p &cStopowanie taska z macrem..");
+                                p.stopMacroPlayer=false;
                                 Thread.currentThread().stop();
                                 break;
                             }
@@ -107,6 +109,7 @@ public class Macro {
                         for (int i = 0; i < packets.size(); ++i) {
                             if (p.stopMacroBot) {
                                 p.sendMessage("$p &cStopowanie taska z macrem..");
+                                p.stopMacroBot=false;
                                 Thread.currentThread().stop();
                                 break;
                             }
@@ -135,6 +138,7 @@ public class Macro {
                     for (int i = 0; i < packets.size(); ++i) {
                         if (p.stopMacroBot) {
                             p.sendMessage("$p &cStopowanie taska z macrem..");
+                            p.stopMacroBot=false;
                             Thread.currentThread().stop();
                             break;
                         }
@@ -170,11 +174,13 @@ public class Macro {
         final SessionAdapter sessionListener = new SessionAdapter() {
             @Override
             public void packetSent(final PacketSentEvent event) {
-                if (p.macroRecording && p.getSessionConnect() != null && event.getPacket().toString().toLowerCase().contains("client")) {
-                    if (packets.size() == 100) {
+                if (p.macroRecording && p.getSessionConnect() != null &&
+                        event.getPacket().toString().toLowerCase().contains("client")) {
+                    final int size = packets.size();
+                    if (Integer.toString(size).contains("0")) { //XDXD
                         p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
                     }
-                    else if (packets.size() == 200) {
+                    /*else if (packets.size() == 200) {
                         p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
                     }
                     else if (packets.size() == 300) {
@@ -197,7 +203,7 @@ public class Macro {
                     }
                     else if (packets.size() == 900) {
                         p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" + packets.size());
-                    }
+                    }*/
                     if (event.getPacket() instanceof ClientPlayerMovementPacket ||
                             event.getPacket() instanceof ClientChangeHeldItemPacket ||
                             event.getPacket() instanceof ClientWindowActionPacket ||
