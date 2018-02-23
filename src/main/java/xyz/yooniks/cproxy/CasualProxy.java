@@ -43,6 +43,8 @@ import xyz.yooniks.cproxy.managers.PlayerManager;
 import xyz.yooniks.cproxy.managers.ProxyManager;
 import xyz.yooniks.cproxy.objects.Bot;
 import xyz.yooniks.cproxy.objects.Player;
+import xyz.yooniks.cproxy.threads.LagThread;
+import xyz.yooniks.cproxy.threads.TabThread;
 import xyz.yooniks.cproxy.utils.ChatUtilities;
 import xyz.yooniks.cproxy.utils.DateUtilities;
 
@@ -134,33 +136,8 @@ public class CasualProxy extends Proxy implements Loader {
                 p.setSessionConnect(null);
                 p.setLastPacketMs(0L);
                 p.setLastPacket("&cRozlaczono");
-                final Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (session.isConnected()) {
-                            p.updateTab();
-                            try {
-                                Thread.sleep(20L);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-                final Thread t2 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (session.isConnected()) {
-                            p.updateLag();
-                            try {
-                                Thread.sleep(1000L);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                });
-                t.start();
+                final Thread t = new TabThread();
+                final Thread t2 = new LagThread();
                 t2.start();
                 /*session.send(new ServerTeamPacket("yooniks", TeamAction.ADD_PLAYER, new String[] { "yooniks" }));
                 session.send(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, "yooniks"));
