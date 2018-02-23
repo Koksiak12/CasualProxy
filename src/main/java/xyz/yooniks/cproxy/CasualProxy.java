@@ -137,6 +137,7 @@ public class CasualProxy extends Proxy implements Loader {
                 p.setLastPacketMs(0L);
                 p.setLastPacket("&cRozlaczono");
                 final Thread t = new TabThread();
+                t.start();
                 final Thread t2 = new LagThread();
                 t2.start();
                 /*session.send(new ServerTeamPacket("yooniks", TeamAction.ADD_PLAYER, new String[] { "yooniks" }));
