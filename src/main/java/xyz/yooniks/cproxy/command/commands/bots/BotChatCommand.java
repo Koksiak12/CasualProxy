@@ -32,12 +32,9 @@ public class BotChatCommand extends Command {
         final String nickBot = args[1];
         if (nickBot.equalsIgnoreCase("all") || nickBot.contains("all")) {
             if (infinite) {
-                final Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+                final Thread t = new Thread(() -> {
                         while (true) {
-                            if (p.isStopChatBot() || p.getBots().size()==0){
-                                p.setStopChatBot(false);
+                            if (p.getBots().size() == 0) {
                                 Thread.currentThread().stop();
                                 break;
                             }
@@ -50,9 +47,25 @@ public class BotChatCommand extends Command {
 
                             }
                         }
+                });
+                t.start();
+                p.chatBotsSpamThread = t;
+            } else {
+                final Thread t = new Thread(() -> {
+                    if (p.getBots().size() == 0) {
+                        Thread.currentThread().stop();
+                        return;
+                    }
+                    for (Bot bot : p.getBots())
+                        bot.getSession().send(new ClientChatPacket(builder.toString()));
+                    try {
+                        Thread.sleep(1000L * seconds);
+                    } catch (InterruptedException e) {
+
                     }
                 });
                 t.start();
+                p.chatBotsSpamThread = t;
             }
         } else {
             boolean exists = false;

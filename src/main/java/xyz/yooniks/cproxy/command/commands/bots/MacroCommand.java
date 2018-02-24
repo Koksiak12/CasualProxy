@@ -100,8 +100,7 @@ public class MacroCommand extends Command {
                     }
                     p.sendMessage("$p &aOdtwarzam macro, ID: &7" + macro2.getId() + "&a, typ macra: " +
                             "&7BOT&a, infinite: &7" + infinite+"&a, zastopuj uzywajac: &7,stop macrobot");
-                    final Macro j = macro2;
-                    j.macroStartDoing(p, infinite);
+                    macro2.macroStartDoing(p, infinite);
                 }
             }
         }
@@ -114,7 +113,10 @@ public class MacroCommand extends Command {
                 p.sendMessage("$p &aMacro nagrane i gotowe do uzytku. &a("
                         + p.macro.getPackets().size() + "&a pakietow, &aczas: "
                         + p.macro.getTime() + "ms ("+ TimeUnit.MILLISECONDS.toSeconds(p.macro.getTime())+"sek)&a, id: &7" + p.macro.getId() + "&a)");
-                p.macroRecording=false;
+                p.macro.stopRecording(p);
+                //p.macroRecording=false;
+                //MacroManager.macros.add(p.macro);
+                //p.macro=null;
             }
         }
         else if (args[1].equalsIgnoreCase("list")) {

@@ -133,18 +133,12 @@ public class CrashCommand extends Command {
 
                         while (true) {
                             if (bots) {
-                                if (p.isStopCrashBot()){
-                                    p.setStopCrashBot(false);
-                                    p.sendMessage("$p &cPrzerywanie crashowania (botow)..");
-                                    Thread.currentThread().stop();
-                                    return;
-                                }
+                                //raczej sprawdzanie tutaj czy wielkosc listy botow jest rowna 0 i stopowanie threada niepotrzebne
                                 crashBots(p, packets, packet);
                             }
                             else {
-                                if (p.getSessionConnect() == null || !p.isConnected() || p.isStopCrash()) {
+                                if (p.getSessionConnect() == null || !p.isConnected()) {
                                     p.sendMessage("$p &cPrzerywanie crashowania..");
-                                    p.setStopCrash(false);
                                     Thread.currentThread().stop();
                                     return;
                                 }
@@ -161,6 +155,12 @@ public class CrashCommand extends Command {
                     }
                 });
                 t.start();
+                if (bots)
+                    p.crashBotsThread = t;
+
+                else
+                    p.crashPlayerThread = t;
+
             } else {
                 Packet packet;
 
@@ -185,7 +185,7 @@ public class CrashCommand extends Command {
 
     private void crash(Player p, Integer packets,Packet packet) {
         for (int i = 0; i < packets; i++) {
-            if (!p.isConnected() || p.getSessionConnect() == null || p.isStopCrash()) break;
+            if (!p.isConnected() || p.getSessionConnect() == null) break;
             //p.getSessionConnect().send(new ClientWindowActionPacket(0, 1, 1, is,
              //       WindowAction.CLICK_ITEM, ClickItemParam.LEFT_CLICK));
             p.getSessionConnect().send(packet);
@@ -194,8 +194,6 @@ public class CrashCommand extends Command {
 
     private void crashBots(Player p, Integer packets, Packet packet) {
         for (int i = 0; i < packets; i++) {
-            if (p.isStopCrashBot())
-                break;
             for (Bot bot : p.getBots()) {
                 //bot.getSession().send(new ClientWindowActionPacket(0, 1, 1, is,
                 //        WindowAction.CLICK_ITEM, ClickItemParam.LEFT_CLICK));

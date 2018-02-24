@@ -29,11 +29,11 @@ public class Player extends Connector {
     private boolean logged;
 
     private boolean mother;
-    private boolean stopCrash;
+    /*private boolean stopCrash;
     private boolean stopChatBot;
-    private boolean stopCrashBot;
-    public boolean stopMacroBot;
-    public boolean stopMacroPlayer;
+    private boolean stopCrashBot;*/
+    public boolean stopMacroBot; //to tez kiedys poprawie, jak bedzie mi sie chcialo xd
+    public boolean stopMacroPlayer; //to tez kiedys poprawie, jak bedzie mi sie chcialo xd
 
     public boolean macroRecording;
     public Macro macro;
@@ -42,6 +42,8 @@ public class Player extends Connector {
 
     public PlayerOptions playerOptions;
     public BotOptions botOptions;
+
+    public Thread crashPlayerThread, crashBotsThread, chatBotsSpamThread;
 
     public Player(String name, Group group) {
         this.nick = name;
@@ -165,7 +167,7 @@ public class Player extends Connector {
         this.mother = mother;
     }
 
-    public boolean isStopCrash() {
+    /*public boolean isStopCrash() {
         return stopCrash;
     }
 
@@ -187,5 +189,5 @@ public class Player extends Connector {
 
     public void setStopCrashBot(boolean stopCrashBot) {
         this.stopCrashBot = stopCrashBot;
-    }
+    }*/
 }

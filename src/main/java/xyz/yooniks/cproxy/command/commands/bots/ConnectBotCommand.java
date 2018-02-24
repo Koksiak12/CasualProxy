@@ -24,6 +24,7 @@ import xyz.yooniks.cproxy.managers.ProxyManager;
 import xyz.yooniks.cproxy.objects.Bot;
 import xyz.yooniks.cproxy.objects.Macro;
 import xyz.yooniks.cproxy.objects.Player;
+import xyz.yooniks.cproxy.utils.ChatUtilities;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -96,6 +97,7 @@ public class ConnectBotCommand extends Command {
                         try {
                             Thread.sleep(msDelay);
                         } catch (InterruptedException ex) {
+                            owner.sendMessage("$p &cDelay nieudany! &7" + ex.getMessage());
                         }
                     }
                 }

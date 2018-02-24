@@ -106,7 +106,7 @@ public class ConnectCommand extends Command {
                     host = argIp.split(":")[0];
                     port = Integer.parseInt(argIp.split(":")[1]);
                 }
-                System.out.println("host: "+host+" port: "+port+" argip: "+argIp);
+                //System.out.println("host: "+host+" port: "+port+" argip: "+argIp);
                 final GameProfile profile = session.getFlag("profile");
                 final Player p = PlayerManager.getPlayer(profile.getName());
                 p.setLastPacketMs(0L);

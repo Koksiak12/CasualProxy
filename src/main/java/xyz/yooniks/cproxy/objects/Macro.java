@@ -14,6 +14,7 @@ import org.spacehq.packetlib.packet.Packet;
 import xyz.yooniks.cproxy.enums.MacroType;
 import xyz.yooniks.cproxy.managers.MacroManager;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,7 +27,11 @@ public class Macro {
     private long time;
     private String owner;
 
+    private List<Integer> showMessageHowManyPackets;
+
     public Macro(final int id, final MacroType macroType, String owner) {
+        this.showMessageHowManyPackets = Arrays.asList(1, 10, 30, 50, 70, 100, 150, 200,
+                300, 400, 500, 600, 700, 800, 900, 1000, 1100);
         this.packets = new CopyOnWriteArrayList<>();
         this.id = id;
         this.macroType = macroType;
@@ -126,7 +131,6 @@ public class Macro {
                                 i = 0;
                             }
                         }
-                        Thread.currentThread().stop();
                     }
                 }
             }).start();
@@ -163,6 +167,7 @@ public class Macro {
         p.macroRecording=false;
         p.macro=null;
         p.getSessionConnect().removeListener(this.sessionListener);
+        this.sessionListener = null;
         MacroManager.macros.add(this);
         this.time = System.currentTimeMillis() - this.time;
     }
@@ -176,34 +181,10 @@ public class Macro {
             public void packetSent(final PacketSentEvent event) {
                 if (p.macroRecording && p.getSessionConnect() != null &&
                         event.getPacket().toString().toLowerCase().contains("client")) {
-                    final int size = packets.size();
-                    if (Integer.toString(size).contains("0")) { //XDXD
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
+                    final Integer size = packets.size();
+                    if (showMessageHowManyPackets.contains(size)) { //innego pomyslu nie mialem xd
+                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" + size);
                     }
-                    /*else if (packets.size() == 200) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
-                    }
-                    else if (packets.size() == 300) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
-                    }
-                    else if (packets.size() == 400) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
-                    }
-                    else if (packets.size() == 500) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
-                    }
-                    else if (packets.size() == 600) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" + packets.size());
-                    }
-                    else if (packets.size() == 700) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" +packets.size());
-                    }
-                    else if (packets.size() == 800) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" + packets.size());
-                    }
-                    else if (packets.size() == 900) {
-                        p.sendMessage("$p &aRejestrowanie macra, aktualnie zarejestrowanych &apakietow: &7" + packets.size());
-                    }*/
                     if (event.getPacket() instanceof ClientPlayerMovementPacket ||
                             event.getPacket() instanceof ClientChangeHeldItemPacket ||
                             event.getPacket() instanceof ClientWindowActionPacket ||
@@ -217,7 +198,7 @@ public class Macro {
                             event.getPacket() instanceof ClientConfirmTransactionPacket ||
                             event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
                             event.getPacket() instanceof ClientKeepAlivePacket) {
-                        if (event.getPacket() instanceof ClientChatPacket){
+                        if (event.getPacket() instanceof ClientChatPacket) {
                             if (((ClientChatPacket) event.getPacket()).getMessage().startsWith(","))return;
                         }
                         packets.add(event.getPacket());

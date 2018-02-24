@@ -19,37 +19,37 @@ public class StopCommand extends Command {
         }
         final String type = args[1];
         if (type.equalsIgnoreCase("chatbot")||type.equalsIgnoreCase("botchat")) {
-            if (!p.isStopChatBot()) {
+            if (p.chatBotsSpamThread != null) {
                 p.sendMessage("$p &cProba stopowania taska z chatem od botow..");
-                p.setStopChatBot(true);
+                p.chatBotsSpamThread.stop();
                 return;
             }
             else{
-                p.sendMessage("$p &cTa opcja jest juz wlaczona!");
+                p.sendMessage("$p &cTaki thread nie istnieje!");
             }
         }
         else if (type.equalsIgnoreCase("crashbot")||type.equalsIgnoreCase("botcrash")) {
-            if (!p.isStopCrashBot()) {
+            if (p.crashBotsThread != null) {
                 p.sendMessage("$p &cProba stopowania taska z crashem od botow..");
-                p.setStopCrashBot(true);
+                p.crashBotsThread.stop();
                 return;
             }
             else{
-                p.sendMessage("$p &cTa opcja jest juz wlaczona!");
+                p.sendMessage("$p &cTaki thread nie istnieje!");
             }
         }
         else if (type.equalsIgnoreCase("crash")||type.equalsIgnoreCase("crashplayer")) {
-            if (!p.isStopCrash()) {
+            if (p.crashPlayerThread != null) {
                 p.sendMessage("$p &cProba stopowania taska z crashem od playera..");
-                p.setStopCrash(true);
+                p.crashPlayerThread.stop();
                 return;
             }
             else{
-                p.sendMessage("$p &cTa opcja jest juz wlaczona!");
+                p.sendMessage("$p &cTaki thread nie istnieje!");
             }
         }
         else if (type.equalsIgnoreCase("macrobot")||type.equalsIgnoreCase("botmacro")) {
-            if (!p.stopMacroBot) {
+            if (!p.stopMacroBot) { //to kiedys tez zedytuje xd
                 p.sendMessage("$p &cProba stopowania taska z robieniem macra botow..");
                 p.stopMacroBot=true;
                 return;

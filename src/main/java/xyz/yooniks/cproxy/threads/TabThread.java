@@ -9,14 +9,18 @@ public class TabThread extends Thread {
 
     @Override
     public void run() {
-        for (Session session : CasualProxy.getPlayers()) {
-            final Player p = PlayerManager.getPlayer(session);
-            if (session.isConnected()) {
-                p.updateTab();
-                try {
-                    Thread.sleep(20L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        while (true) {
+            if (CasualProxy.getPlayers().size() >= 1) {
+                for (Session session : CasualProxy.getPlayers()) {
+                    final Player p = PlayerManager.getPlayer(session);
+                    if (session.isConnected()) {
+                        p.updateTab();
+                        try {
+                            Thread.sleep(20L);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
             }
         }

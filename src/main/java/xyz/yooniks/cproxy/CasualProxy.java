@@ -15,9 +15,12 @@ import org.spacehq.mc.protocol.data.status.VersionInfo;
 import org.spacehq.mc.protocol.data.status.handler.ServerInfoBuilder;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientChatPacket;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientRequestPacket;
+import org.spacehq.mc.protocol.packet.ingame.client.ClientSettingsPacket;
+import org.spacehq.mc.protocol.packet.ingame.client.ClientTabCompletePacket;
 import org.spacehq.mc.protocol.packet.ingame.client.player.*;
 import org.spacehq.mc.protocol.packet.ingame.client.window.ClientCloseWindowPacket;
 import org.spacehq.mc.protocol.packet.ingame.client.window.ClientConfirmTransactionPacket;
+import org.spacehq.mc.protocol.packet.ingame.client.window.ClientCreativeInventoryActionPacket;
 import org.spacehq.mc.protocol.packet.ingame.client.window.ClientWindowActionPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerChatPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
@@ -35,6 +38,7 @@ import org.spacehq.packetlib.event.server.ServerAdapter;
 import org.spacehq.packetlib.event.server.SessionAddedEvent;
 import org.spacehq.packetlib.event.server.SessionRemovedEvent;
 import org.spacehq.packetlib.event.session.*;
+import org.spacehq.packetlib.packet.Packet;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import xyz.yooniks.cproxy.command.Command;
 import xyz.yooniks.cproxy.command.CommandManager;
@@ -52,11 +56,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class CasualProxy extends Proxy implements Loader {
 
     private static List<String> accessPlayers = new ArrayList<>();
-    private static List<Session> players = new ArrayList<>();
+    private static List<Session> players = new CopyOnWriteArrayList<>();
     private Server server;
 
     public static List<Session> getPlayers() {
@@ -89,7 +94,7 @@ public class CasualProxy extends Proxy implements Loader {
                 if (!accessPlayers.contains(profile.getName())) {
                     session.disconnect(ChatUtilities
                             .fixColor("$p &7" + profile.getName() + ", " +
-                                    "&cnie posiadasz dostepu do tego serwera.\nZakup dostep na skype: &ayooniksyooniks@gmail.com"));
+                                    "&cnie posiadasz dostepu do tego serwera.\nZakup dostep na skype: &ayooniksyooniks@gmail.com" + "\n\n&7@edit, dodaj siebie w CasualProxy/settings.xml, zmien unsafe_cash na swoj nick, jezeli ten plik nie istnieje to go pobierz i zedytuj: www.github.com/yooniks/CasualProxy/CasualProxy/settings.xml"));
                     return;
                 }
                 final Player p = PlayerManager.getPlayer(session);
@@ -204,27 +209,40 @@ public class CasualProxy extends Proxy implements Loader {
                             p.setPosition(new Position((int) packet.getX(), (int) packet.getY(), (int) packet.getZ()));
                             p.setYaw(packet.getYaw());
                             p.setPitch(packet.getPitch());
-                            return;
-                        } if (event.getPacket() instanceof ClientPlayerPositionRotationPacket ||
-                                event.getPacket() instanceof ClientPlayerMovementPacket ||
-                                event.getPacket() instanceof ClientWindowActionPacket ||
-                                event.getPacket() instanceof ClientSwingArmPacket ||
-                                event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
-                                event.getPacket() instanceof ClientRequestPacket ||
-                                event.getPacket() instanceof ClientPlayerActionPacket ||
-                                event.getPacket() instanceof ClientPlayerStatePacket
-                                || (event.getPacket() instanceof ClientChatPacket &&
-                                !((ClientChatPacket) event.getPacket()).getMessage().startsWith(","))
-                                || event.getPacket() instanceof ClientChangeHeldItemPacket ||
-                                event.getPacket() instanceof ClientCloseWindowPacket ||
-                                event.getPacket() instanceof ClientConfirmTransactionPacket) {
-                            final GameProfile profile = event.getSession().getFlag("profile");
-                            final Player p = PlayerManager.getPlayer(profile.getName());
                             if (p.isMother() && p.isConnected() && p.getSessionConnect() != null) {
                                 if (p.getBots().size() > 0) {
                                     for (Bot bot : p.getBots()) {
                                         bot.getSession().send(event.getPacket());
                                     }
+                                }
+                            }
+                            return;
+                        }
+                        if (/*event.getPacket() instanceof ClientPlayerPositionPacket ||
+                                /*event.getPacket() instanceof ClientPlayerPositionRotationPacket ||
+                               /* event.getPacket() instanceof ClientPlayerMovementPacket ||*/
+                                event.getPacket() instanceof ClientWindowActionPacket ||
+                                event.getPacket() instanceof ClientSwingArmPacket ||
+                                event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
+                                event.getPacket() instanceof ClientRequestPacket ||
+                                        event.getPacket() instanceof ClientPlayerStatePacket ||
+                                        event.getPacket() instanceof ClientChangeHeldItemPacket ||
+                                event.getPacket() instanceof ClientCloseWindowPacket ||
+                                        event.getPacket() instanceof ClientPlayerRotationPacket ||
+                                        event.getPacket() instanceof ClientConfirmTransactionPacket ||
+                                        event.getPacket() instanceof ClientPlayerActionPacket ||
+                                        event.getPacket() instanceof ClientCreativeInventoryActionPacket ||
+                                        event.getPacket() instanceof ClientSettingsPacket ||
+                                        event.getPacket() instanceof ClientSteerVehiclePacket ||
+                                        event.getPacket() instanceof ClientTabCompletePacket) {
+                            final GameProfile profile = event.getSession().getFlag("profile");
+                            final Player p = PlayerManager.getPlayer(profile.getName());
+                            if (p.isMother() && p.isConnected() && p.getSessionConnect() != null) {
+                                if ((event.getPacket() instanceof ClientChatPacket &&
+                                        ((ClientChatPacket) event.getPacket()).getMessage().startsWith(","))) return;
+                                if (p.getBots().size() > 0) {
+                                    for (Bot bot : p.getBots())
+                                        bot.getSession().send(event.getPacket());
                                 }
                             }
                         }
