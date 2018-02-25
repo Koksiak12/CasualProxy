@@ -1,33 +1,19 @@
 package xyz.yooniks.cproxy;
 
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.XMLConfiguration;
-import xyz.yooniks.cproxy.command.commands.*;
-import xyz.yooniks.cproxy.command.commands.bots.*;
-import xyz.yooniks.cproxy.command.commands.settings.*;
-import xyz.yooniks.cproxy.enums.Group;
 import xyz.yooniks.cproxy.exceptions.InvalidLicenseReturnException;
-import xyz.yooniks.cproxy.managers.PlayerManager;
 import xyz.yooniks.cproxy.managers.ProxyManager;
-import xyz.yooniks.cproxy.objects.Player;
-import xyz.yooniks.cproxy.utils.DateUtilities;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
-import java.util.logging.Logger;
 
 public class Proxy extends JFrame {
 
-    private static Logger logger = Logger.getLogger("CasualProxy");
-    public char[] chars;
-    private XMLConfiguration config;
     private JPanel panel;
 
     public Proxy() {
@@ -46,8 +32,6 @@ public class Proxy extends JFrame {
         label.setBounds(250, 150, 50, 25);
         label.setSize(50, 25);
         add(label);
-
-        Arrays.fill(chars = new char[7680], ' ');
         final JMenuBar menuBar = new JMenuBar();
         final JMenu menu = new JMenu("Plik");
         final JMenuItem menuItem = new JMenuItem("Zamknij");
@@ -72,18 +56,11 @@ public class Proxy extends JFrame {
     }
 
     public static void main(String[] args) {
-        //SwingUtilities.invokeLater(new Runnable() {
-        //   @Override
-        // public void run() {
-        new Proxy().setVisible(true);
-          /*  }
-        });*/
+        EventQueue.invokeLater(() -> {
+            new Proxy().setVisible(true);
+        });
         final CasualProxy proxy = new CasualProxy();
         proxy.onLoad();
-    }
-
-    public static Logger getLogger() {
-        return logger;
     }
 
     private void checkWWW() throws InvalidLicenseReturnException {
@@ -95,7 +72,13 @@ public class Proxy extends JFrame {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 if (inputLine.equalsIgnoreCase("true")) {
-                    getLogger().info("\n\n\n\n\n\n\n\n\n\n\n\n##################################\n\nLicencja poprawna!\n\n#########################");
+                    System.out.println(
+                            "\n\n\n\n\n\n\n\n\n\n\n\n" +
+                                    "##################################" +
+                                    "\n\n" +
+                                    "Licencja poprawna!" +
+                                    "\n\n" +
+                                    "#########################");
                 } else {
                     dispose();
                     throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
@@ -106,73 +89,5 @@ public class Proxy extends JFrame {
             dispose();
             throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji (lub nie masz internetu), proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
         }
-    }
-
-    protected void loadConfig() {
-        if (!new File("CasualProxy").exists()) {
-            new File("CasualProxy").mkdirs();
-        }
-        if (!new File("CasualProxy", "settings.xml").exists()) {
-            final XMLConfiguration configCreate = new XMLConfiguration();
-            configCreate.setBasePath("CasualProxy");
-            configCreate.setFileName("settings.xml");
-            configCreate.addProperty("users", Arrays.asList("unsafe_cash;ADMIN;haslodoproxy;10-02-2019:14:00:00"));
-            this.config = configCreate;
-        } else {
-            final XMLConfiguration configCreate = new XMLConfiguration();
-            try {
-                configCreate.load(new File("CasualProxy", "settings.xml"));
-            } catch (ConfigurationException ex) {
-                ex.printStackTrace();
-            }
-            this.config = configCreate;
-        }
-        this.config.setBasePath("CasualProxy");
-        this.config.setFileName("settings.xml");
-        try {
-            config.save();
-        } catch (ConfigurationException ex) {
-            ex.printStackTrace();
-        }
-        try {
-            final XMLConfiguration config2 = new XMLConfiguration("CasualProxy/settings.xml");
-            for (int i = 0; i < config2.getStringArray("users").length; ++i) {
-                final String[] array = config2.getStringArray("users");
-                final String[] split = array[i].split(";");
-                final Player p = PlayerManager.getPlayer(split[0]);
-                p.setGroup(Group.valueOf(split[1]));
-                p.setPassword(split[2]);
-                p.setExpirationDate(DateUtilities.getDateFromString(split[3]));
-                CasualProxy.addAccess(p.getNick());
-            }
-            this.config = config2;
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void loadCommands() {
-        new ConnectCommand();
-        new CrashCommand();
-        new ConnectBotCommand();
-        new QuitCommand();
-        new DetachCommand();
-        new BotListCommand();
-        new BotChatCommand();
-        new MotherCommand();
-        new TimeOutCommand();
-        new HelpCommand();
-        new PingCommand();
-        new BotQuitCommand();
-        new StopCommand();
-        new ChatFromBotCommand();
-        new ChatFromServerCommand();
-        new AutoReconnectCommand();
-        new AutoReconnectTimeCommand();
-        new AutoCaptchaCommand();
-        new MacroCommand();
-        new AutoLoginCommand();
-        new MessagesBotCommand();
-        new ProxyCommand();
     }
 }

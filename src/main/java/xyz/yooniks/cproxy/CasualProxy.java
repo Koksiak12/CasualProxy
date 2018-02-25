@@ -4,6 +4,7 @@ import org.spacehq.mc.auth.data.GameProfile;
 import org.spacehq.mc.protocol.MinecraftProtocol;
 import org.spacehq.mc.protocol.ServerLoginHandler;
 import org.spacehq.mc.protocol.data.game.Position;
+import org.spacehq.mc.protocol.data.game.values.HandshakeIntent;
 import org.spacehq.mc.protocol.data.game.values.MessageType;
 import org.spacehq.mc.protocol.data.game.values.entity.player.GameMode;
 import org.spacehq.mc.protocol.data.game.values.setting.Difficulty;
@@ -13,6 +14,7 @@ import org.spacehq.mc.protocol.data.status.PlayerInfo;
 import org.spacehq.mc.protocol.data.status.ServerStatusInfo;
 import org.spacehq.mc.protocol.data.status.VersionInfo;
 import org.spacehq.mc.protocol.data.status.handler.ServerInfoBuilder;
+import org.spacehq.mc.protocol.packet.handshake.client.HandshakePacket;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientChatPacket;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientRequestPacket;
 import org.spacehq.mc.protocol.packet.ingame.client.ClientSettingsPacket;
@@ -32,6 +34,7 @@ import org.spacehq.mc.protocol.packet.ingame.server.entity.player.ServerPlayerPo
 import org.spacehq.mc.protocol.packet.ingame.server.world.ServerSpawnPositionPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.world.ServerUpdateTimePacket;
 import org.spacehq.mc.protocol.packet.ingame.server.world.ServerWorldBorderPacket;
+import org.spacehq.mc.protocol.packet.status.client.StatusPingPacket;
 import org.spacehq.packetlib.Server;
 import org.spacehq.packetlib.Session;
 import org.spacehq.packetlib.event.server.ServerAdapter;
@@ -57,7 +60,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class CasualProxy extends Proxy implements Loader {
+public class CasualProxy extends ProxyHelper implements Loader {
 
     private static List<String> accessPlayers = new ArrayList<>();
     private static List<Session> players = new CopyOnWriteArrayList<>();
@@ -144,12 +147,13 @@ public class CasualProxy extends Proxy implements Loader {
                 t.start();
                 final Thread t2 = new LagThread();
                 t2.start();
+                if (p == null || session == null) return;
                 /*session.send(new ServerTeamPacket("yooniks", TeamAction.ADD_PLAYER, new String[] { "yooniks" }));
                 session.send(new ServerDisplayScoreboardPacket(ScoreboardPosition.SIDEBAR, "yooniks"));
                 session.send(new ServerScoreboardObjectivePacket("yooniks", ObjectiveAction.ADD, "yooniks", ScoreType.INTEGER));
                 session.send(new ServerScoreboardObjectivePacket("yooniks", ObjectiveAction.UPDATE, "yooniks", ScoreType.INTEGER));*/
                 players.add(session);
-                p.sendMessage(String.valueOf(chars));
+                p.sendMessage(String.valueOf(getChars()));
                 p.sendMessage("$p &7Zaloguj sie uzywajac: &a,login [haslo]");
                 session.send(new ServerTitlePacket(
                         ChatUtilities.fixColor("$p &7Zaloguj sie uzywajac: &a,login [haslo]"), true));
@@ -189,7 +193,7 @@ public class CasualProxy extends Proxy implements Loader {
                 final GameProfile[] profiles = {new GameProfile(UUID.randomUUID(),
                         ChatUtilities.fixColor("&7Autor proxy: &ayooniks\n\n&8>> &7Lista aktywnych socks do 200ms: " +
                                 "&a" + ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies + " \n" +
-                                "\n&8>> &7Crasherka NBT normalna + jedna omijajaca XProtectora/antycrashe!\n&8>> &7Bardzo szybkie boty, macro, mother, pelno ustawien do botow itd."))};
+                                "\n&8>> &7Crasherki NBT i wiecej\n&8>> &7Bardzo szybkie boty, macro, mother, pelno ustawien do botow itd."))};
                 return new ServerStatusInfo(new VersionInfo("§2§lCasual§a§lProxy                    §7Online: §a" + players.size() + " ", 48),
                         new PlayerInfo(800, 0, profiles),
                         new TextMessage("§2Casual§aProxy §8| §7Dostep na skype: §ayooniksyooniks@gmail.com\n      §aComing soon.."), null);
@@ -201,6 +205,20 @@ public class CasualProxy extends Proxy implements Loader {
                 event.getSession().addListener(new SessionAdapter() {
                     @Override
                     public void packetReceived(final PacketReceivedEvent event) {
+
+                        //System.out.println(event.getPacket().getClass().getSimpleName());
+                        //TODO
+
+                        if (event.getPacket() instanceof HandshakePacket) {
+                            final HandshakePacket packet = event.getPacket();
+                            if (packet.getIntent() == HandshakeIntent.STATUS) {
+                                getLogger().info("Uzyskano pakiet pingu od: " + packet.getHostName());
+                                ChatUtilities.broadcast("$p &7Uzyskano pakiet pingu od: &a" + packet.getHostName());
+                            }
+                            return;
+                        }
+
+
                         if (event.getPacket() instanceof ClientPlayerMovementPacket) {
                             final GameProfile profile = event.getSession().getFlag("profile");
                             final Player p = PlayerManager.getPlayer(profile.getName());
