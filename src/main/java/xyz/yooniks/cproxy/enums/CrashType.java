@@ -2,9 +2,19 @@ package xyz.yooniks.cproxy.enums;
 
 public enum CrashType {
 
-    WINDOW,
-    PLACE,
-    /*SET_CREATIVE_SLOT, kod crashera tez usuniety, zeby nikt go nie mial*/
-    SWINGARM;
+    WINDOW(true),
+    PLACE(true),
+    SET_CREATIVE_SLOT(true),
+    CHANGE_HELD_ITEM(false),
+    SWINGARM(false);
 
+    private Boolean hasItem;
+
+    private CrashType(Boolean hasItem) {
+        this.hasItem = hasItem;
+    }
+
+    public Boolean hasItem() {
+        return hasItem;
+    }
 }

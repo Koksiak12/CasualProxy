@@ -7,7 +7,7 @@ import xyz.yooniks.cproxy.objects.Player;
 public class AutoLoginCommand extends Command {
 
     public AutoLoginCommand() {
-        super("autologin", "Wlacz/wylacz autologowanie na serwerach", ",autologin [bots/player]",
+        super("autologin", "Wlacz/wylacz autologowanie na serwerach", ",autologin [bots/runnables]",
                 Group.GRACZ, "botsautologin","autoregister");
     }
 

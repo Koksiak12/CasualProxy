@@ -7,7 +7,7 @@ import xyz.yooniks.cproxy.objects.Player;
 public class AutoReconnectTimeCommand extends Command {
 
     public AutoReconnectTimeCommand() {
-        super("autoreconnecttime", "Ustaw czas reconnecta (antybot)", ",autoreconnecttime [bots/player] [czas w sek]",
+        super("autoreconnecttime", "Ustaw czas reconnecta (antybot)", ",autoreconnecttime [bots/runnables] [czas w sek]",
                 Group.GRACZ, "botsautoreconnecttime","botautoreconnecttime");
     }
 

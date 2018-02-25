@@ -7,7 +7,7 @@ import xyz.yooniks.cproxy.objects.Player;
 public class AutoCaptchaCommand extends Command {
 
     public AutoCaptchaCommand() {
-        super("autocaptcha", "Wlacz/wylacz autocaptche", ",autocaptcha [bots/player]",
+        super("autocaptcha", "Wlacz/wylacz autocaptche", ",autocaptcha [bots/runnables]",
                 Group.GRACZ, "botsautocaptcha","botautocaptcha");
     }
 

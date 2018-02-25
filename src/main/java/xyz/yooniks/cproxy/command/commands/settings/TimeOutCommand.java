@@ -7,7 +7,7 @@ import xyz.yooniks.cproxy.objects.Player;
 public class TimeOutCommand extends Command {
 
     public TimeOutCommand() {
-        super("timeout", "Ustaw timeout polaczen!", ",timeout [player/bots] [ping/connect] [czas w sek]",
+        super("timeout", "Ustaw timeout polaczen!", ",timeout [runnables/bots] [ping/connect] [czas w sek]",
                 Group.GRACZ, "connecttimeout", "settimeout");
     }
 
@@ -20,7 +20,7 @@ public class TimeOutCommand extends Command {
         final String type = args[1];
         final String type2 = args[2];
         final Integer seconds = Integer.parseInt(args[3]);
-        if (type.equalsIgnoreCase("player")||type.equalsIgnoreCase("gracz")){
+        if (type.equalsIgnoreCase("runnables") || type.equalsIgnoreCase("gracz")) {
             if (type2.equalsIgnoreCase("ping")){
                 p.playerOptions.timeOutPing=seconds;
                 p.sendMessage("$p &7Ustawiono timeout pingu na: &a"+p.playerOptions.timeOutPing);

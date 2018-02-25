@@ -32,7 +32,7 @@ public class Proxy extends JFrame {
     private JPanel panel;
 
     public Proxy() {
-        super("CasualProxy created by yooniks.");
+        super("CasualProxy created by yooniks");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
         setLocation(50, 50);

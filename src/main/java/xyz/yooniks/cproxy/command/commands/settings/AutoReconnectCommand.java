@@ -7,7 +7,7 @@ import xyz.yooniks.cproxy.objects.Player;
 public class AutoReconnectCommand extends Command {
 
     public AutoReconnectCommand() {
-        super("autoreconnect", "Wlacz/wylacz autoreconnect (reconnect antybot)", ",autoreconnect [bots/player]",
+        super("autoreconnect", "Wlacz/wylacz autoreconnect (reconnect antybot)", ",autoreconnect [bots/runnables]",
                 Group.GRACZ, "botsautoreconnect","botautoreconnect");
     }
 

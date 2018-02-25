@@ -20,7 +20,7 @@ public class MacroCommand extends Command {
     @Override
     public void onCommand(Player p, Command command, String[] args) {
         if (args.length < 2) {
-            p.sendMessage("$p &7Poprawne uzycie: &a,macro start [bot/player]");
+            p.sendMessage("$p &7Poprawne uzycie: &a,macro start [bot/runnables]");
             p.sendMessage("&a,macro play [id macra] [typ macra (bot/human)] [infinite, true/false]");
             p.sendMessage("&a,macro stop&7 - konczy nagrywanie macra");
             p.sendMessage("&a,stop &7- komendy do stopowania wykonywania macra");
@@ -48,8 +48,7 @@ public class MacroCommand extends Command {
                     p.sendMessage("$p &aZaczynam nagrywac macro.. ID macra: &7" + macro.getId() + "&a, typ macra: &7BOT");
                     p.macro=macro;
                     macro.startRecording(p);
-                }
-                else if (args[2].equalsIgnoreCase("player")) {
+                } else if (args[2].equalsIgnoreCase("runnables")) {
                     final Random rand = new Random();
                     int id = rand.nextInt(400);
                     for (final Macro m : MacroManager.macros) {
@@ -64,7 +63,7 @@ public class MacroCommand extends Command {
                 }
             }
             else {
-                p.sendMessage("$p &7Poprawne uzycie: &a,macro start [bot/player]");
+                p.sendMessage("$p &7Poprawne uzycie: &a,macro start [bot/runnables]");
                 p.sendMessage("&a,macro play [id macra] [typ macra (bot/human)] [infinite, true/false]");
                 p.sendMessage("&a,macro stop&7 - konczy nagrywanie macra");
                 p.sendMessage("&a,stop &7- komendy do stopowania wykonywania macra");
@@ -84,7 +83,7 @@ public class MacroCommand extends Command {
                 }
                 final boolean infinite = Boolean.valueOf(args[4]);
                 final String type = args[3];
-                if (type.equalsIgnoreCase("player") || type.equalsIgnoreCase("human")) {
+                if (type.equalsIgnoreCase("runnables") || type.equalsIgnoreCase("human")) {
                     if (p.getSessionConnect()==null) {
                         p.sendMessage("$p &cNie jestes polaczony z zadnym serwerem!");
                         return;

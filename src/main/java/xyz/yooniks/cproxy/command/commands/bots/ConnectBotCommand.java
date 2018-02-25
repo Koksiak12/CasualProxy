@@ -77,7 +77,7 @@ public class ConnectBotCommand extends Command {
     private void connectBots(Player owner, int amount, String host, Integer port, long msDelay, boolean ping, Proxy proxy,Macro macro) {
         owner.sendMessage("$p &a" + amount + " &7botow laczy do: &a"
                 + host + " &8(" + port + ")&7, wykonuja macro ID: &a" + ((macro == null) ? "none" :
-                (Integer.toString(macro.getId()) + "\n $p &7Powiadomienia beda wyswietlane co kilkanascie botow")));
+                Integer.toString(macro.getId())) + "\n $p &7Powiadomienia beda wyswietlane co kilkanascie botow");
         //owner.sendMessage("$p &7Boty lacza za chwile do serwera: &a" + host + "&7, delay: &a" + msDelay + "ms&7, ilosc botow: &a" + amount);
         final Random rand = new Random();
         final Proxy proksi;
