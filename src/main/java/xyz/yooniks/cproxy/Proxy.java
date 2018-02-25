@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -72,30 +71,6 @@ public class Proxy extends JFrame {
         ProxyManager.loadProxies(false);
     }
 
-    private void checkWWW() throws InvalidLicenseReturnException {
-        try {
-            URL oracle = new URL("https://raw.githubusercontent.com/yooniks/proxy_license/master/license.txt");
-            URLConnection yc = oracle.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                if (inputLine.equalsIgnoreCase("true")){
-                    getLogger().info("\n\n\n\n\n\n\n\n\n\n\n\n##################################\n\nLicencja poprawna!\n\n#########################");
-                }
-                else{
-                    dispose();
-                    throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
-                }
-            }
-            in.close();
-        }
-        catch (Throwable ex){
-            dispose();
-            throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji (lub nie masz internetu), proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
-        }
-    }
-
     public static void main(String[] args) {
         //SwingUtilities.invokeLater(new Runnable() {
         //   @Override
@@ -109,6 +84,28 @@ public class Proxy extends JFrame {
 
     public static Logger getLogger() {
         return logger;
+    }
+
+    private void checkWWW() throws InvalidLicenseReturnException {
+        try {
+            URL oracle = new URL("https://raw.githubusercontent.com/yooniks/proxy_license/master/license.txt");
+            URLConnection yc = oracle.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    yc.getInputStream()));
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                if (inputLine.equalsIgnoreCase("true")) {
+                    getLogger().info("\n\n\n\n\n\n\n\n\n\n\n\n##################################\n\nLicencja poprawna!\n\n#########################");
+                } else {
+                    dispose();
+                    throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji, proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
+                }
+            }
+            in.close();
+        } catch (Throwable ex) {
+            dispose();
+            throw new InvalidLicenseReturnException("Wykryto blad podczas ladowania licencji (lub nie masz internetu), proxy zostaje wylaczone, jezeli chcesz uzyskac ponowny dostep zglos sie do wlasciciela proxy, czyli yooniksa, kontakt skype: yooniksyooniks@gmail.com, znajdziesz mnie takze na forum, np: skript.pl");
+        }
     }
 
     protected void loadConfig() {

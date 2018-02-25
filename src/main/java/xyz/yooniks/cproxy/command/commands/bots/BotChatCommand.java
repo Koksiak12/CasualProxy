@@ -33,20 +33,19 @@ public class BotChatCommand extends Command {
         if (nickBot.equalsIgnoreCase("all") || nickBot.contains("all")) {
             if (infinite) {
                 final Thread t = new Thread(() -> {
-                        while (true) {
-                            if (p.getBots().size() == 0) {
-                                Thread.currentThread().stop();
-                                break;
-                            }
-                            for (Bot bot : p.getBots())
-                                bot.getSession().send(new ClientChatPacket(builder.toString()));
-                            try{
-                                Thread.sleep(1000L*seconds);
-                            }
-                            catch (InterruptedException e){
-
-                            }
+                    while (true) {
+                        if (p.getBots().size() == 0) {
+                            Thread.currentThread().stop();
+                            break;
                         }
+                        for (Bot bot : p.getBots())
+                            bot.getSession().send(new ClientChatPacket(builder.toString()));
+                        try {
+                            Thread.sleep(1000L * seconds);
+                        } catch (InterruptedException e) {
+
+                        }
+                    }
                 });
                 t.start();
                 p.chatBotsSpamThread = t;

@@ -6,11 +6,11 @@ public class PlayerOptions {
     public int timeOutPing;
 
     public boolean chatFromBots;
-    public boolean chatFromServer =true;
-    public boolean autoReconnect=true;
-    public boolean autoCaptcha=true;
+    public boolean chatFromServer = true;
+    public boolean autoReconnect = true;
+    public boolean autoCaptcha = true;
 
-    public boolean autoLogin=true;
+    public boolean autoLogin = true;
 
     public int autoReconnectTime = 3;
 }

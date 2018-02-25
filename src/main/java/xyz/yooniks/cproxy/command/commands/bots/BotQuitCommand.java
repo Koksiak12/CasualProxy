@@ -1,6 +1,5 @@
 package xyz.yooniks.cproxy.command.commands.bots;
 
-import org.spacehq.mc.protocol.packet.ingame.client.ClientChatPacket;
 import xyz.yooniks.cproxy.command.Command;
 import xyz.yooniks.cproxy.enums.Group;
 import xyz.yooniks.cproxy.objects.Bot;
@@ -10,12 +9,12 @@ public class BotQuitCommand extends Command {
 
     public BotQuitCommand() {
         super("botquit", "Boty wychodza z serwerow!", ",botquit [all/nick bota]",
-                Group.GRACZ, "botsquit","bquit","quitbot","quitbots");
+                Group.GRACZ, "botsquit", "bquit", "quitbot", "quitbots");
     }
 
     @Override
     public void onCommand(Player p, Command command, String[] args) {
-        if (args.length < 2){
+        if (args.length < 2) {
             p.sendMessage("$p &7Poprawne uzycie: &a" + getUsage());
             return;
         }

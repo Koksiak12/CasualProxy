@@ -10,7 +10,6 @@ import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import xyz.yooniks.cproxy.command.Command;
 import xyz.yooniks.cproxy.enums.Group;
 import xyz.yooniks.cproxy.objects.Player;
-import xyz.yooniks.cproxy.resolvers.SRVResolver;
 
 import java.net.Proxy;
 
@@ -23,7 +22,7 @@ public class PingCommand extends Command {
 
     @Override
     public void onCommand(Player p, Command command, String[] args) {
-        if (args.length < 2 || !args[1].contains(":")){
+        if (args.length < 2 || !args[1].contains(":")) {
             p.sendMessage("$p &7Poprawne uzycie: &a" + getUsage());
             return;
         }

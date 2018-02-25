@@ -18,38 +18,30 @@ import java.util.List;
 
 public class Player extends Connector {
 
-    private String nick;
-    private Group group;
-
-    private Session session;
-
-    private long expirationDate;
-
-    private String password;
-    private boolean logged;
-
-    private boolean mother;
     /*private boolean stopCrash;
     private boolean stopChatBot;
     private boolean stopCrashBot;*/
     public boolean stopMacroBot; //to tez kiedys poprawie, jak bedzie mi sie chcialo xd
     public boolean stopMacroPlayer; //to tez kiedys poprawie, jak bedzie mi sie chcialo xd
-
     public boolean macroRecording;
     public Macro macro;
-
-    private List<Bot> bots = new LinkedList<>();
-
     public PlayerOptions playerOptions;
     public BotOptions botOptions;
-
     public Thread crashPlayerThread, crashBotsThread, chatBotsSpamThread;
+    private String nick;
+    private Group group;
+    private Session session;
+    private long expirationDate;
+    private String password;
+    private boolean logged;
+    private boolean mother;
+    private List<Bot> bots = new LinkedList<>();
 
     public Player(String name, Group group) {
         this.nick = name;
         this.group = group;
-        this.playerOptions=new PlayerOptions();
-        this.botOptions=new BotOptions();
+        this.playerOptions = new PlayerOptions();
+        this.botOptions = new BotOptions();
     }
 
     public boolean can(Group group) {
@@ -73,7 +65,7 @@ public class Player extends Connector {
                     ) + "ms temu&8):\n&8( &a" + getLastPacket() + "&8 )\n&7Twoj nick: &a" + nick + "\n&7Serwer docelowy: &a" +
                             sessionConnect.getHost() + ":" + sessionConnect.getPort() + "\n " +
                             "&7Liczba twoich botow: &a" + bots.size() + "\n&7Lista aktywnych proxy: &a" +
-                            ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies+
+                            ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies +
                             "\n\n&7Zakup dostep do proxy na skype:" +
                             " &ayooniksyooniks@gmail.com"))));
         } else if (sessionConnect == null || getLastPacket().toLowerCase().contains("rozlaczono")) {
@@ -82,7 +74,7 @@ public class Player extends Connector {
                     new TextMessage(ChatUtilities.fixColor("\n&7Ostatni pakiet z serwera &8(&70ms temu&8):\n&8( &cRozlaczono &8)\n&7Twoj nick: &a" + nick + "\n&7Serwer docelowy: &a" +
                             "brak" + "\n " +
                             "&7Liczba twoich botow: &a" + bots.size() + "\n&7Lista aktywnych proxy: &a" +
-                            ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies+
+                            ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies +
                             "\n\n&7Zakup dostep do proxy na skype:" +
                             " &ayooniksyooniks@gmail.com"))));
         }

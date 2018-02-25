@@ -21,7 +21,7 @@ public class BotListCommand extends Command {
         p.sendMessage("&7Ilosc botow: &a" + p.getBots().size());
         for (int i = 0; i < p.getBots().size(); i++) {
             final Bot bot = p.getBots().get(i);
-            p.sendMessage("&2" + i+1 + ". &7nick: &a" + bot.getName() + "&7, serwer: &a" + bot.getSession().getHost());
+            p.sendMessage("&2" + i + 1 + ". &7nick: &a" + bot.getName() + "&7, serwer: &a" + bot.getSession().getHost());
         }
     }
 }

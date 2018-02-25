@@ -13,12 +13,12 @@ public class ChatFromBotCommand extends Command {
 
     @Override
     public void onCommand(Player p, Command command, String[] args) {
-        if (p.playerOptions.chatFromBots){
+        if (p.playerOptions.chatFromBots) {
             p.sendMessage("$p &7Od teraz &cnie przyjmujesz&7 wiadomosci z &achatu botow&7!");
-            p.playerOptions.chatFromBots=false;
+            p.playerOptions.chatFromBots = false;
             return;
         }
         p.sendMessage("$p &7Od teraz &aprzyjmujesz&7 wiadomosci z &achatu botow&7!");
-        p.playerOptions.chatFromBots=true;
+        p.playerOptions.chatFromBots = true;
     }
 }

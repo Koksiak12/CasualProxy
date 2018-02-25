@@ -24,7 +24,6 @@ import xyz.yooniks.cproxy.managers.ProxyManager;
 import xyz.yooniks.cproxy.objects.Bot;
 import xyz.yooniks.cproxy.objects.Macro;
 import xyz.yooniks.cproxy.objects.Player;
-import xyz.yooniks.cproxy.utils.ChatUtilities;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -50,31 +49,29 @@ public class ConnectBotCommand extends Command {
             final Long delay = Long.parseLong(args[4]);
             final java.net.Proxy proxy;
             final Macro macro;
-            if (args[6].contains("none")||args[6].contains("null")){
-                macro=null;
-            }
-            else{
+            if (args[6].contains("none") || args[6].contains("null")) {
+                macro = null;
+            } else {
                 macro = MacroManager.getMacroById(Integer.parseInt(args[6]));
             }
             if (args[5].contains(":")) {
                 proxy = new java.net.Proxy(java.net.Proxy.Type.SOCKS,
                         new InetSocketAddress(args[5].split(":")[0],
                                 Integer.valueOf(args[5].split(":")[1])));
-                p.sendMessage("$p &7Ip proxy: &aspecified&7 &8(&7"+proxy.address().toString().split(":")[0]+":"
-                        +proxy.address().toString().split(":")[1]+"&8)");
-            } else if (args[5].contains("random")||args[5].contains("top")){
+                p.sendMessage("$p &7Ip proxy: &aspecified&7 &8(&7" + proxy.address().toString().split(":")[0] + ":"
+                        + proxy.address().toString().split(":")[1] + "&8)");
+            } else if (args[5].contains("random") || args[5].contains("top")) {
                 proxy = null;
                 p.sendMessage("$p &7Ip proxy: &arandom from list socks.txt");
-            }
-            else{
+            } else {
                 p.sendMessage("$p &7Ip proxy: &anull &8(&70:0&8)");
                 proxy = java.net.Proxy.NO_PROXY;
             }
-            connectBots(p, amount, host, port, delay, ping,proxy,macro);
+            connectBots(p, amount, host, port, delay, ping, proxy, macro);
         }
     }
 
-    private void connectBots(Player owner, int amount, String host, Integer port, long msDelay, boolean ping, Proxy proxy,Macro macro) {
+    private void connectBots(Player owner, int amount, String host, Integer port, long msDelay, boolean ping, Proxy proxy, Macro macro) {
         owner.sendMessage("$p &a" + amount + " &7botow laczy do: &a"
                 + host + " &8(" + port + ")&7, wykonuja macro ID: &a" + ((macro == null) ? "none" :
                 Integer.toString(macro.getId())) + "\n $p &7Powiadomienia beda wyswietlane co kilkanascie botow");
@@ -82,32 +79,29 @@ public class ConnectBotCommand extends Command {
         final Random rand = new Random();
         final Proxy proksi;
         if (proxy == null)
-            proksi= ProxyManager.getRandomProxy();
+            proksi = ProxyManager.getRandomProxy();
         else
             proksi = proxy;
         for (int i = 0; i < amount; i++) {
 
-            final int i2 = i+1;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    final String nick = "CasualProxy" + rand.nextInt(1000);
-                    connectBot(owner, nick, host, port, ping, msDelay,proksi,macro,i2,amount,true);
-                    if (msDelay != 0) {
-                        try {
-                            Thread.sleep(msDelay);
-                        } catch (InterruptedException ex) {
-                            owner.sendMessage("$p &cDelay nieudany! &7" + ex.getMessage());
-                        }
+            final int i2 = i + 1;
+            new Thread(() -> {
+                final String nick = "CasualProxy" + rand.nextInt(1000);
+                connectBot(owner, nick, host, port, ping, msDelay, proksi, macro, i2, amount, true);
+                if (msDelay != 0) {
+                    try {
+                        Thread.sleep(msDelay);
+                    } catch (InterruptedException ex) {
+                        owner.sendMessage("$p &cDelay nieudany! &7" + ex.getMessage());
                     }
                 }
             }).start();
         }
     }
 
-    private void connectBot(Player owner, String nick, String host, int port, boolean ping, long msDelay, Proxy proxy, Macro macro, final int amount, final int maxamount,boolean msg) {
+    private void connectBot(Player owner, String nick, String host, int port, boolean ping, long msDelay, Proxy proxy, Macro macro, final int amount, final int maxamount, boolean msg) {
         if (amount == 1 || amount == 10 || amount == 25 || amount == 40 || amount == 50 || amount == 70 || amount == 90 || amount == 100 || amount == 150 || amount == 200 || amount == 250 || amount == 300 || amount == 350 || amount == 400 || amount == 450 || amount == 500 || amount == 550 || amount == 600 || amount == 700 || amount == 800 || amount == 900 || amount == 1000) {
-            owner.sendMessage("$p &aBot &7" + nick + " &a(ilosc: "+amount+"/" + maxamount + ", proxy: " + ((proxy == null || proxy == Proxy.NO_PROXY) ? "null, ip: 0, port: 0" : ("SOCKS, ip: " + proxy.address().toString().split(":")[0] + ", port: " + proxy.address().toString().split(":")[1])) + " &alaczy do: &7" + host + ":" + port + "&a)");
+            owner.sendMessage("$p &aBot &7" + nick + " &a(ilosc: " + amount + "/" + maxamount + ", proxy: " + ((proxy == null || proxy == Proxy.NO_PROXY) ? "null, ip: 0, port: 0" : ("SOCKS, ip: " + proxy.address().toString().split(":")[0] + ", port: " + proxy.address().toString().split(":")[1])) + " &alaczy do: &7" + host + ":" + port + "&a)");
         }
         final Client c = new Client(host, port, new MinecraftProtocol(nick), new TcpSessionFactory(proxy));
         c.getSession().setConnectTimeout(owner.botOptions.timeOutConnect);
@@ -128,12 +122,12 @@ public class ConnectBotCommand extends Command {
         c.getSession().addListener(new SessionListener() {
             @Override
             public void packetReceived(PacketReceivedEvent e) {
-                if (e.getPacket() instanceof ServerChatPacket){
-                    if (owner.playerOptions.chatFromBots && ((ServerChatPacket) e.getPacket()).getMessage()!=null){
-                        if (((ServerChatPacket) e.getPacket()).getType()!= MessageType.CHAT)return;
-                        owner.sendMessage("&7[Bot &a"+nick+"&7]");
+                if (e.getPacket() instanceof ServerChatPacket) {
+                    if (owner.playerOptions.chatFromBots && ((ServerChatPacket) e.getPacket()).getMessage() != null) {
+                        if (((ServerChatPacket) e.getPacket()).getType() != MessageType.CHAT) return;
+                        owner.sendMessage("&7[Bot &a" + nick + "&7]");
                         owner.sendMessage(((ServerChatPacket) e.getPacket()).getMessage().getText());
-                        owner.sendMessage("&7[Bot &a"+nick+"&7]");
+                        owner.sendMessage("&7[Bot &a" + nick + "&7]");
                     }
                 }
                 //autocaptcha
@@ -150,8 +144,7 @@ public class ConnectBotCommand extends Command {
                             e.getSession().send(new ClientChatPacket("/register " + args2[1] + " cproxy123 cproxy123"));
                             e.getSession().send(new ClientChatPacket("/register cproxy123 cproxy123 " + args2[1]));
                             //owner.sendMessage("$p &7Wykryto kod captcha: &a" + args2[1]);
-                        }
-                        else if (p3.getMessage().toString().toLowerCase().contains("kod") && p3.getMessage().toString().toLowerCase().contains("to")) {
+                        } else if (p3.getMessage().toString().toLowerCase().contains("kod") && p3.getMessage().toString().toLowerCase().contains("to")) {
                             if (e.getSession().getHost().contains("megaxcore")) return;
                             final String message = p3.getMessage().toString();
                             final String[] args2 = message.split("to ");
@@ -190,14 +183,14 @@ public class ConnectBotCommand extends Command {
                 }
                 if (e.getPacket() instanceof ServerJoinGamePacket) {
                     if (owner.botOptions.join)
-                        owner.sendMessage("$p &7Bot &a" + nick + "&7 dolaczyl do serwera: &a" + host+":"+port+" &8(&a"+amount+"&7/&2"+maxamount+"&8)");
+                        owner.sendMessage("$p &7Bot &a" + nick + "&7 dolaczyl do serwera: &a" + host + ":" + port + " &8(&a" + amount + "&7/&2" + maxamount + "&8)");
                     if (owner.botOptions.autoLogin) {
                         c.getSession().send(new ClientChatPacket("/register cproxy123 cproxy123"));
                         c.getSession().send(new ClientChatPacket("/l cproxy123"));
                     }
                     c.getSession().send(new ClientKeepAlivePacket(1));
-                    if (macro!=null)
-                        macro.macroStartDoing(owner,false);
+                    if (macro != null)
+                        macro.macroStartDoing(owner, false);
                     owner.addBot(bot);
                 } else if (e.getPacket() instanceof ServerDisconnectPacket) {
                     final ServerDisconnectPacket packet = e.getPacket();
@@ -229,14 +222,14 @@ public class ConnectBotCommand extends Command {
                             owner.sendMessage("&c[AntyBot] &7Bot &a" + nick + "&7 zostal rozlaczony z &a" + host + "&7, powod: &a" + packet.getReason());
                         c.getSession().disconnect("antybot");
                         if (owner.botOptions.autoReconnect) {
-                            if (owner.botOptions.autoReconnectTime >0) {
+                            if (owner.botOptions.autoReconnectTime > 0) {
                                 try {
                                     Thread.sleep(1000L * owner.botOptions.autoReconnectTime);
                                 } catch (InterruptedException ex) {
                                 }
                             }
                         }
-                        connectBot(owner, nick, host, port, ping, msDelay,proxy,macro,amount,maxamount,false);
+                        connectBot(owner, nick, host, port, ping, msDelay, proxy, macro, amount, maxamount, false);
                     } else {
                         if (owner.botOptions.quit)
                             owner.sendMessage("&7Bot &a" + nick + "&7 zostal rozlaczony z &a" + host + "&7, powod: &a" + packet.getReason());
@@ -265,21 +258,21 @@ public class ConnectBotCommand extends Command {
                         e.getReason().contains("zaloguj")) {
                     if (owner.botOptions.quit)
                         owner.sendMessage("&c[AntyBot] &7Bot &a" + nick + "&7 zostal rozlaczony z &a" + host + "&7, powod: &a" + e.getReason() + "&7, cause: &a"
-                            + e.getCause().getMessage());
+                                + e.getCause().getMessage());
                     c.getSession().disconnect("antybot");
                     if (owner.botOptions.autoReconnect) {
-                        if (owner.botOptions.autoReconnectTime >0) {
+                        if (owner.botOptions.autoReconnectTime > 0) {
                             try {
                                 Thread.sleep(1000L * owner.botOptions.autoReconnectTime);
                             } catch (InterruptedException ex) {
                             }
                         }
                     }
-                    connectBot(owner, nick, host, port, ping, msDelay, proxy,macro,amount,maxamount,false);
-                }else {
+                    connectBot(owner, nick, host, port, ping, msDelay, proxy, macro, amount, maxamount, false);
+                } else {
                     if (owner.botOptions.quit)
                         owner.sendMessage("&7Bot &a" + nick + "&7 zostal rozlaczony z &a" + host + "&7, powod: &a" + e.getReason() + "&7, cause: &a"
-                            + e.getCause().getMessage());
+                                + e.getCause().getMessage());
                 }
             }
         });

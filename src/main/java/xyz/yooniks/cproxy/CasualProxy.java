@@ -38,7 +38,6 @@ import org.spacehq.packetlib.event.server.ServerAdapter;
 import org.spacehq.packetlib.event.server.SessionAddedEvent;
 import org.spacehq.packetlib.event.server.SessionRemovedEvent;
 import org.spacehq.packetlib.event.session.*;
-import org.spacehq.packetlib.packet.Packet;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
 import xyz.yooniks.cproxy.command.Command;
 import xyz.yooniks.cproxy.command.CommandManager;
@@ -189,8 +188,8 @@ public class CasualProxy extends Proxy implements Loader {
             public ServerStatusInfo buildInfo(final Session session) {
                 final GameProfile[] profiles = {new GameProfile(UUID.randomUUID(),
                         ChatUtilities.fixColor("&7Autor proxy: &ayooniks\n\n&8>> &7Lista aktywnych socks do 200ms: " +
-                                "&a"+ ProxyManager.proxies.size()+"&8/&c"+ProxyManager.allproxies +" \n" +
-                        "\n&8>> &7Crasherka NBT normalna + jedna omijajaca XProtectora/antycrashe!\n&8>> &7Bardzo szybkie boty, macro, mother, pelno ustawien do botow itd."))};
+                                "&a" + ProxyManager.proxies.size() + "&8/&c" + ProxyManager.allproxies + " \n" +
+                                "\n&8>> &7Crasherka NBT normalna + jedna omijajaca XProtectora/antycrashe!\n&8>> &7Bardzo szybkie boty, macro, mother, pelno ustawien do botow itd."))};
                 return new ServerStatusInfo(new VersionInfo("§2§lCasual§a§lProxy                    §7Online: §a" + players.size() + " ", 48),
                         new PlayerInfo(800, 0, profiles),
                         new TextMessage("§2Casual§aProxy §8| §7Dostep na skype: §ayooniksyooniks@gmail.com\n      §aComing soon.."), null);
@@ -222,12 +221,12 @@ public class CasualProxy extends Proxy implements Loader {
                                 /*event.getPacket() instanceof ClientPlayerPositionRotationPacket ||
                                /* event.getPacket() instanceof ClientPlayerMovementPacket ||*/
                                 event.getPacket() instanceof ClientWindowActionPacket ||
-                                event.getPacket() instanceof ClientSwingArmPacket ||
-                                event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
-                                event.getPacket() instanceof ClientRequestPacket ||
+                                        event.getPacket() instanceof ClientSwingArmPacket ||
+                                        event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
+                                        event.getPacket() instanceof ClientRequestPacket ||
                                         event.getPacket() instanceof ClientPlayerStatePacket ||
                                         event.getPacket() instanceof ClientChangeHeldItemPacket ||
-                                event.getPacket() instanceof ClientCloseWindowPacket ||
+                                        event.getPacket() instanceof ClientCloseWindowPacket ||
                                         event.getPacket() instanceof ClientPlayerRotationPacket ||
                                         event.getPacket() instanceof ClientConfirmTransactionPacket ||
                                         event.getPacket() instanceof ClientPlayerActionPacket ||

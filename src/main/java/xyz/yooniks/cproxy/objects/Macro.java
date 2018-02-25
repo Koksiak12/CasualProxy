@@ -35,7 +35,7 @@ public class Macro {
         this.packets = new CopyOnWriteArrayList<>();
         this.id = id;
         this.macroType = macroType;
-        this.owner=owner;
+        this.owner = owner;
     }
 
     public String getOwner() {
@@ -59,18 +59,17 @@ public class Macro {
                     public void run() {
                         final Session s = p.getSessionConnect();
                         while (true) {
-                            for (int i = 0; i <packets.size(); ++i) {
-                                if (p.stopMacroPlayer || s==null){
+                            for (int i = 0; i < packets.size(); ++i) {
+                                if (p.stopMacroPlayer || s == null) {
                                     p.sendMessage("$p &cStopowanie taska z macrem..");
-                                    p.stopMacroPlayer=false;
+                                    p.stopMacroPlayer = false;
                                     Thread.currentThread().stop();
                                     break;
                                 }
                                 s.send(packets.get(i));
                                 try {
                                     Thread.sleep(45L);
-                                }
-                                catch (InterruptedException e) {
+                                } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                                 if (i >= packets.size()) {
@@ -80,24 +79,22 @@ public class Macro {
                         }
                     }
                 }).start();
-            }
-            else {
+            } else {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         final Session s = p.getSessionConnect();
                         for (int i = 0; i < packets.size(); ++i) {
-                            if (p.stopMacroPlayer || s==null){
+                            if (p.stopMacroPlayer || s == null) {
                                 p.sendMessage("$p &cStopowanie taska z macrem..");
-                                p.stopMacroPlayer=false;
+                                p.stopMacroPlayer = false;
                                 Thread.currentThread().stop();
                                 break;
                             }
                             s.send(packets.get(i));
                             try {
                                 Thread.sleep(45L);
-                            }
-                            catch (InterruptedException e) {
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         }
@@ -105,8 +102,7 @@ public class Macro {
                     }
                 }).start();
             }
-        }
-        else if (infinite) {
+        } else if (infinite) {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -114,7 +110,7 @@ public class Macro {
                         for (int i = 0; i < packets.size(); ++i) {
                             if (p.stopMacroBot) {
                                 p.sendMessage("$p &cStopowanie taska z macrem..");
-                                p.stopMacroBot=false;
+                                p.stopMacroBot = false;
                                 Thread.currentThread().stop();
                                 break;
                             }
@@ -123,8 +119,7 @@ public class Macro {
                             }
                             try {
                                 Thread.sleep(45L);
-                            }
-                            catch (InterruptedException e) {
+                            } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                             if (i >= packets.size()) {
@@ -134,15 +129,14 @@ public class Macro {
                     }
                 }
             }).start();
-        }
-        else {
+        } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     for (int i = 0; i < packets.size(); ++i) {
                         if (p.stopMacroBot) {
                             p.sendMessage("$p &cStopowanie taska z macrem..");
-                            p.stopMacroBot=false;
+                            p.stopMacroBot = false;
                             Thread.currentThread().stop();
                             break;
                         }
@@ -151,8 +145,7 @@ public class Macro {
                         }
                         try {
                             Thread.sleep(45L);
-                        }
-                        catch (InterruptedException e) {
+                        } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
@@ -164,8 +157,8 @@ public class Macro {
 
     public void stopRecording(Player p) {
         if (p.getSessionConnect() == null) return;
-        p.macroRecording=false;
-        p.macro=null;
+        p.macroRecording = false;
+        p.macro = null;
         p.getSessionConnect().removeListener(this.sessionListener);
         this.sessionListener = null;
         MacroManager.macros.add(this);
@@ -173,8 +166,8 @@ public class Macro {
     }
 
     public void startRecording(Player p) {
-        if (p.getSessionConnect() == null)return;
-        p.macroRecording=true;
+        if (p.getSessionConnect() == null) return;
+        p.macroRecording = true;
         this.time = System.currentTimeMillis();
         final SessionAdapter sessionListener = new SessionAdapter() {
             @Override
@@ -199,7 +192,7 @@ public class Macro {
                             event.getPacket() instanceof ClientPlayerPlaceBlockPacket ||
                             event.getPacket() instanceof ClientKeepAlivePacket) {
                         if (event.getPacket() instanceof ClientChatPacket) {
-                            if (((ClientChatPacket) event.getPacket()).getMessage().startsWith(","))return;
+                            if (((ClientChatPacket) event.getPacket()).getMessage().startsWith(",")) return;
                         }
                         packets.add(event.getPacket());
                     }
@@ -212,8 +205,8 @@ public class Macro {
 
             @Override
             public void disconnected(final DisconnectedEvent disconnectedEvent) {
-                p.macroRecording=false;
-                p.macro=null;
+                p.macroRecording = false;
+                p.macro = null;
             }
         };
         p.getSessionConnect().addListener(sessionListener);

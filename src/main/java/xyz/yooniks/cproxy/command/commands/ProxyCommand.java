@@ -1,6 +1,5 @@
 package xyz.yooniks.cproxy.command.commands;
 
-import xyz.yooniks.cproxy.Proxy;
 import xyz.yooniks.cproxy.command.Command;
 import xyz.yooniks.cproxy.enums.Group;
 import xyz.yooniks.cproxy.managers.ProxyManager;
@@ -36,8 +35,7 @@ public class ProxyCommand extends Command {
                     }
                 }
             }).start();
-        }
-        else {
+        } else {
             if (args[1].equalsIgnoreCase("add") && args.length < 3) {
                 p.sendMessage("$p &7Poprawne uzycie: &a,proxy add <ip:port> [checker ms, host:ip (np: whois.internic.net:43)]");
                 return;

@@ -1,11 +1,11 @@
 package xyz.yooniks.cproxy.objects;
 
-import com.fasterxml.jackson.databind.*;
-import java.net.*;
-import java.io.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class Proxy
-{
+import java.io.IOException;
+import java.net.URL;
+
+public class Proxy {
     public boolean online;
     public long ms;
     public java.net.Proxy proxy;
@@ -26,8 +26,7 @@ public class Proxy
                     + "\n&aKraj: &7" + ((objectMapper.readTree(new URL(url)).get("country") == null)
                     ? "brak" : objectMapper.readTree(new URL(url)).get("country").toString()) +
                     " \n&aCzas polaczenia (ms): &7" + this.ms + "\n&aOnline: &7" + (this.online ? "&6tak" : "&cnie"));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("couldn't get info proxy! " + e.getMessage());
             p.sendMessage("$p &cBlad z uzyskaniem informacji o proxy!");
         }

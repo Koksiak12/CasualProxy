@@ -15,9 +15,9 @@ public class DetachCommand extends Command {
 
     @Override
     public void onCommand(Player p, Command command, String[] args) {
-        if (p.isConnected()&&p.getSessionConnect()!=null) {
+        if (p.isConnected() && p.getSessionConnect() != null) {
             final GameProfile profile = p.getSessionConnect().getFlag("profile");
-            final Bot bot = new Bot(p,profile.getName(),p.getSessionConnect());
+            final Bot bot = new Bot(p, profile.getName(), p.getSessionConnect());
             p.addBot(bot);
             p.getSessionConnect().getListeners().forEach(l -> p.getSessionConnect().removeListener(l));
             p.setConnected(false);
